@@ -34,6 +34,37 @@
     ::-webkit-scrollbar-thumb:hover {
         background: #9ca3af;
     }
+
+    @media print {
+        #sidebar, header, nav, button, .no-print, input, select, label, .fixed {
+            display: none !important;
+        }
+        main {
+            padding: 0 !important;
+            margin: 0 !important;
+            background: white !important;
+            width: 100% !important;
+            overflow: visible !important;
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+        }
+        body {
+            background: white !important;
+            color: black !important;
+        }
+        .shadow-sm, .shadow-md, .shadow-lg {
+            box-shadow: none !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        .flex-1 {
+            overflow: visible !important;
+        }
+        .h-screen {
+            height: auto !important;
+            overflow: visible !important;
+        }
+    }
     </style>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

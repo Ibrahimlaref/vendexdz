@@ -30,9 +30,6 @@
             <x-responsive-sidebar-link href="{{ route('agent.products') }}" :active="request()->routeIs('agent.products')">
                 <i class="ri-price-tag-3-line text-sm"></i> Products
             </x-responsive-sidebar-link>
-            <x-responsive-sidebar-link href="{{ route('agent.bills') }}" :active="request()->routeIs('agent.bills')">
-                <i class="ri-coins-line text-sm"></i> Bills
-            </x-responsive-sidebar-link>
             <x-responsive-sidebar-link href="{{ route('agent.report') }}" :active="request()->routeIs('agent.report')">
                 <i class="ri-file-chart-line text-sm"></i> Raport
             </x-responsive-sidebar-link>

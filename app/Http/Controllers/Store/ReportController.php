@@ -7,5 +7,8 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    //
+    public function deliveryRates()
+    {
+        return view('store.reports.delivery-rates');
+    }
 }

@@ -10,7 +10,9 @@ class OrderItems extends Model
         'oid',
         'product_id',
         'vid',   
-        'quantity',     
+        'quantity',
+        'rate_at_confirmation',
+        'gerant_rate_at_confirmation',
     ];
     public function product()
     {

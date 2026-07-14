@@ -14,6 +14,7 @@ class Product extends Model
         'url',
         'category_id',
         'price',
+        'gerant_rate',
     ];
 
     public static $rules = [

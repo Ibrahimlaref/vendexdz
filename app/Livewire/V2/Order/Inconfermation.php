@@ -169,7 +169,7 @@ class Inconfermation extends Component
             'city'          => $this->activeOrder->client->town ?? '',
             'wilaya'        => $this->activeOrder->client->wilaya ?? '',
             'total_price'   => $this->activeOrder->details->total ?? 0,
-            'delivery_type' => $this->activeOrder->details->delivery_type,
+            'delivery_type' => $this->activeOrder->details->stopdesk ?? 0,
             'note'          => $this->activeOrder->details->commenter ?? '',
             'product_name'  => collect($this->activeOrder->items)->map(function($item) {
                 $name = $item->product->nickname ?? $item->product->name;

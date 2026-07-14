@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('oid')->unique();
             $table->foreignId('cid')->index();
-            $table->string('traking')->unique();
+            $table->string('traking')->nullable()->unique();
             $table->foreignId('sid');
             $table->timestamps();
         });

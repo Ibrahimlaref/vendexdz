@@ -15,6 +15,7 @@ use App\Models\Client;
 use App\Models\Product;
 use App\Models\OrderNots;
 use App\Models\order_Comments;
+use App\Models\ProductAgent;
 
 trait OrderTrait
 {
@@ -196,6 +197,42 @@ trait OrderTrait
             $item->variant->increment('quantity', $item->quantity);
         }
     }
+
+    /**
+     * Snapshot both commission rates into order_items at confirmation time.
+     *
+     * - confirmatrice rate: ProductAgent.portion (per agent × product)
+     * - gérant rate: Product.gerant_rate (per product, applies to all gérants)
+     *
+     * Both are locked at confirmation. Whether they ever count toward payroll
+     * depends on the order reaching delivered status later (step=2, statu_new=12).
+     * A later rate change never rewrites historic snapshots.
+     */
+    private function snapshotConfirmationRate(Order $order, int $agentId): void
+    {
+        foreach ($order->items as $item) {
+            // Confirmatrice rate from ProductAgent pivot
+            $productAgent = ProductAgent::where('aid', $agentId)
+                ->where('product_id', $item->product_id)
+                ->first();
+
+            $confirmatriceRate = $productAgent?->portion ?? 0;
+
+            if (!$productAgent) {
+                \Log::warning("Commission: No ProductAgent record for agent {$agentId} / product {$item->product_id} on order {$order->oid}. Confirmatrice rate defaulted to 0.");
+            }
+
+            // Gérant rate from Product itself
+            $product = $item->product;
+            $gerantRate = $product?->gerant_rate ?? 0;
+
+            $item->update([
+                'rate_at_confirmation' => $confirmatriceRate,
+                'gerant_rate_at_confirmation' => $gerantRate,
+            ]);
+        }
+    }
+
     public function confirmStatusWithTimer()
     {
         // Ensure we have an order ID and a time
@@ -253,10 +290,13 @@ trait OrderTrait
 
             if ($oldStatusId == $statusId) return;
 
-            if($statusId == 2)
+            if($statusId == 2) {
                 $this->decrementQuantity($order->items);
-            elseif($oldStatusId == 2)
+                // Snapshot the agent's confirmation rate for payroll
+                $this->snapshotConfirmationRate($order, auth()->id());
+            } elseif($oldStatusId == 2) {
                 $this->incrementQuantity($order->items);
+            }
 
             if($this->showErrorModal) return;
             

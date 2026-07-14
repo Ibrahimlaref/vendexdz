@@ -11,9 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('fees', function (Blueprint $table) {
-            $table->renameColumn('pid', 'product_id');
-        });
+        if (!Schema::hasColumn('fees', 'product_id')) {
+            Schema::table('fees', function (Blueprint $table) {
+                if (Schema::hasColumn('fees', 'pid')) {
+                    $table->renameColumn('pid', 'product_id');
+                } else {
+                    $table->unsignedBigInteger('product_id')->nullable()->after('wid');
+                    $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+                }
+            });
+        }
     }
 
     /**
@@ -22,7 +29,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('fees', function (Blueprint $table) {
-            $table->renameColumn('product_id', 'pid');
+            if (Schema::hasColumn('fees', 'product_id')) {
+                $table->dropForeign(['product_id']);
+                $table->dropColumn('product_id');
+            }
         });
     }
 };

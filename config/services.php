@@ -45,4 +45,9 @@ return [
         'tenant_id' => env('ZR_TENANT_ID'),
         '17track' => env('17TRACKAPIKEY')
     ],
+
+    'google_sheets' => [
+        'service_account_credentials' => env('GOOGLE_SERVICE_ACCOUNT_CREDENTIALS'),
+        'service_account_email' => env('GOOGLE_SERVICE_ACCOUNT_EMAIL'),
+    ],
 ];

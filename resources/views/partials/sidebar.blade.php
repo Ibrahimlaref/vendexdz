@@ -46,7 +46,12 @@
             <x-responsive-sidebar-link href="{{ route('admin.fees') }}" :active="request()->routeIs('admin.fees')">
                 <i class="ri-coins-line text-sm"></i> @lang('Fees')
             </x-responsive-sidebar-link>
-
+            <x-responsive-sidebar-link href="{{ route('admin.commission') }}" :active="request()->routeIs('admin.commission') || request()->routeIs('admin.commission.show')">
+                <i class="ri-money-dollar-circle-line text-sm"></i> @lang('Commission')
+            </x-responsive-sidebar-link>
+            <x-responsive-sidebar-link href="{{ route('admin.payroll') }}" :active="request()->routeIs('admin.payroll')">
+                <i class="ri-file-list-3-line text-sm"></i> @lang('Payroll')
+            </x-responsive-sidebar-link>
         </nav>
     </div>
 

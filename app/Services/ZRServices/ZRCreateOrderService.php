@@ -71,7 +71,25 @@ class ZRCreateOrderService
                 "stockType"   => "none"
             ];
         })->toArray();
-        
+
+        // Determine delivery type: stopdesk (1) = pickup-point, otherwise home
+        $isStopDesk = (int)($standardOrder->delivery_type ?? 0) === 1;
+        $deliveryType = $isStopDesk ? "pickup-point" : "home";
+
+        // For stop-desk orders, validate that the commune supports pickup points
+        if ($isStopDesk) {
+            $hasPickupPoint = $zrCommune['delivery']['hasPickupPoint']
+                ?? $zrCommune['hasPickupPoint']
+                ?? false;
+
+            if (!$hasPickupPoint) {
+                throw new \Exception(
+                    "ZR Error: Stop desk (pickup-point) is not available for commune '{$standardOrder->city}' in {$zrWilaya['name']}. "
+                    . "Please change the delivery type to domicile or select a different commune."
+                );
+            }
+        }
+
         return [
             "customer" => [
                 "customerId"=> "5c809fd6-dfca-4f72-a88a-10dd333339de",
@@ -94,7 +112,7 @@ class ZRCreateOrderService
             "description" => !empty($standardOrder->commenter)
                 ? $standardOrder->commenter
                 : $standardOrder->product_name,
-            "deliveryType" => $standardOrder->delivery_type == 1 ? "pickup-point" : "home",
+            "deliveryType" => $deliveryType,
             "externalId"   => $standardOrder->ref,
         ];
     }
