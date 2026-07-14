@@ -392,26 +392,40 @@ class StoreWorkspace extends Component
     {
         $store_id = auth()->user()->userStore->store_id;
 
-        $format = match ($this->range) {
-            'week'  => '%Y-%u',
-            'month' => '%Y-%m',
-            default => '%Y-%m-%d',
-        };
+        $driver = DB::connection()->getDriverName();
+        if ($driver === 'sqlite') {
+            $format = match ($this->range) {
+                'week'  => '%Y-%W',
+                'month' => '%Y-%m',
+                default => '%Y-%m-%d',
+            };
+            $selectConfirmed = "strftime('{$format}', c.created_at) as period, COUNT(*) as total";
+            $selectDelivered = "strftime('{$format}', d.created_at) as period, COUNT(*) as total";
+        } else {
+            $format = match ($this->range) {
+                'week'  => '%Y-%u',
+                'month' => '%Y-%m',
+                default => '%Y-%m-%d',
+            };
+            $selectConfirmed = "DATE_FORMAT(c.created_at, '{$format}') as period, COUNT(*) as total";
+            $selectDelivered = "DATE_FORMAT(d.created_at, '{$format}') as period, COUNT(*) as total";
+        }
 
         $confirmed = DB::table('order_logs as c')
             ->join('orders as o','o.oid','=','c.oid')
             ->where('o.sid', $store_id)
             ->where('c.step', 1)
             ->whereIn('c.statu_new',[2,3])
-            ->selectRaw("DATE_FORMAT(c.created_at,'{$format}') as period, COUNT(*) as total")
+            ->selectRaw($selectConfirmed)
             ->groupBy('period')
             ->pluck('total','period');
+            
         $delivered = DB::table('order_logs as d')
             ->join('orders as o','o.oid','=','d.oid')
             ->where('o.sid', $store_id)
             ->where('d.step', 2)
             ->where('d.statu_new', 12)
-            ->selectRaw("DATE_FORMAT(d.created_at,'{$format}') as period, COUNT(*) as total")
+            ->selectRaw($selectDelivered)
             ->groupBy('period')
             ->pluck('total','period');
 

@@ -95,6 +95,7 @@ class CommissionDrilldown extends Component
 
     public function render()
     {
-        return view('livewire.manager.commission-drilldown');
+        return view('livewire.manager.commission-drilldown')
+            ->layout('layouts.app');
     }
 }

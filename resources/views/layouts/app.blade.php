@@ -84,6 +84,7 @@
 
             <main class="flex-1 overflow-y-auto p-8">
                 @yield('content')
+                {{ $slot ?? '' }}
             </main>
 
         </div>

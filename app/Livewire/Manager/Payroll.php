@@ -118,6 +118,7 @@ class Payroll extends Component
 
     public function render()
     {
-        return view('livewire.manager.payroll');
+        return view('livewire.manager.payroll')
+            ->layout('layouts.app');
     }
 }

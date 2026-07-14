@@ -41,9 +41,12 @@
                 :active="request()->routeIs('store.territories')">
                 <i class="ri-map-2-line text-sm"></i> @lang('territories & fees')
             </x-responsive-sidebar-link>
-            <x-responsive-sidebar-link href="{{ route('api-tokens.index') }}"
-                :active="request()->routeIs('api-tokens.index')">
-                <i class="ri-key-2-line text-sm"></i> @lang('Webhooks')
+            <!-- <x-responsive-sidebar-link href="{{ route('store.bills') }}" :active="request()->routeIs('store.bills')">
+                <i class="ri-coins-line text-sm"></i> Bills
+            </x-responsive-sidebar-link> -->
+            <x-responsive-sidebar-link href="{{ route('store.integrations') }}"
+                :active="request()->routeIs('store.integrations') || request()->routeIs('store.integrations.setup')">
+                <i class="ri-links-line text-sm"></i> @lang('Magasins')
             </x-responsive-sidebar-link>
         </nav>
     </div>

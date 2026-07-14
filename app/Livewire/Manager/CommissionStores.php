@@ -35,6 +35,7 @@ class CommissionStores extends Component
 
     public function render()
     {
-        return view('livewire.manager.commission-stores');
+        return view('livewire.manager.commission-stores')
+            ->layout('layouts.app');
     }
 }

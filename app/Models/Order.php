@@ -15,6 +15,8 @@ class Order extends Model
         'app_id',
         'custom_id',
         'from',
+        'platform_order_id',
+        'store_integration_id',
         'type'
     ];
 
@@ -27,6 +29,15 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItems::class, 'oid', 'oid');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'aid', 'id');
+    }
+
+    public function integration()
+    {
+        return $this->belongsTo(StoreIntegration::class, 'store_integration_id');
     }
     public function store()
     {

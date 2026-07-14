@@ -11,13 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('fees', function (Blueprint $table) {
-            $table->dropForeign(['sid']);
-            $table->dropColumn('sid');
-
-            $table->unsignedBigInteger('sid')->nullable()->after('id');
-            $table->foreign('sid')->references('id')->on('stores')->onDelete('cascade');
-        });
+        // Duplicate migration, already handled
     }
 
     /**
